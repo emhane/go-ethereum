@@ -34,6 +34,13 @@ import (
 func discv5WormholeSend(ctx *cli.Context) error {
 	log.Root().SetHandler(log.LvlFilterHandler(log.Lvl(ctx.Int(verbosityFlag.Name)), log.StreamHandler(os.Stderr, log.TerminalFormat(true))))
 
+	data, err := os.ReadFile(ctx.String(sendFileFlag.Name))
+	if err != nil {
+		log.Error("Could not read file", "err", err)
+	}
+
+	fmt.Printf("File to send: %s", string(data))
+
 	// Create discv5 session.
 	unhandled := make(chan discover.ReadPacket)
 	disc := startV5WithUnhandled(ctx, unhandled)
@@ -56,8 +63,8 @@ func discv5WormholeSend(ctx *cli.Context) error {
 	if sess, err := kcp.NewConn(fmt.Sprintf("%v:%d", n.IP(), n.UDP()), nil, 10, 3, conn); err == nil {
 		log.Info("Transmitting data")
 		for i := 0; i < 10; i++ {
-			n, err := sess.Write([]byte("this is a very large file"))
 			time.Sleep(time.Second)
+			n, err := sess.Write(data)
 			log.Info("Sent data", "n", n, "err", err)
 		}
 		_, err := sess.Write([]byte("FIN"))

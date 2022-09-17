@@ -125,6 +125,11 @@ var (
 		Usage: "Log level verbosity",
 		Value: 3,
 	}
+	sendFileFlag = &cli.StringFlag{
+		Name:    "file",
+		Usage:   "File to send",
+		EnvVars: []string{"FILE"},
+	}
 )
 
 var v4NodeFlags = []cli.Flag{

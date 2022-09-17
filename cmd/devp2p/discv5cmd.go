@@ -92,6 +92,7 @@ var (
 		Action: discv5WormholeSend,
 		Flags: []cli.Flag{
 			verbosityFlag,
+			sendFileFlag,
 		},
 	}
 	discv5WormholeReceiveCommand = &cli.Command{
